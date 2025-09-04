@@ -1,4 +1,4 @@
-import { Conta } from "./Conta.js";
+import { Conta } from "./model/Conta.js";
 import * as readline from "readline-sync";
 
 //declarar que digite é a variavel que chama entreda
@@ -10,6 +10,7 @@ const conta2 = new Conta(2, 124, 1, "Clovis bucetaldo da silva", 30000);
 
 //para o case
 let entrada = 0;
+
 
 do {
     console.clear;
@@ -31,3 +32,5 @@ do {
                 
 
 }
+while( != 9)
+    console.log("saiu do programa");

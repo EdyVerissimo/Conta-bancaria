@@ -1,5 +1,5 @@
 //Definição dos atributos da minha classe conta
-export class Conta {
+export abstract class Conta {
   private _numero: number;
   private _agencia: number;
   private _tipo: number;
@@ -78,13 +78,24 @@ export class Conta {
   }
 
   public visualizar(): void {
+    let tipoConta: string;
+    switch (this._tipo) {
+      case 1:
+        tipoConta = "Conta corrente";
+        break;
+      case 2:
+        tipoConta = "Conta poupanca";
+      default:
+        tipoConta = "tipo de conta Desconhecido";
+    }
     console.log("\n*************************************");
     console.log("        Dados da Conta");
     console.log("*************************************");
     console.log(`Número da Conta: ${this._numero}`);
     console.log(`Agência: ${this._agencia}`);
-    console.log(`Tipo da Conta: ${this._tipo}`);
+    console.log(`Tipo da Conta: ${tipoConta}`);
     console.log(`Titular: ${this._titular}`);
     console.log(`Saldo: R$ ${this._saldo.toFixed(2)}`);
+    console.log("****************************************");
   }
 }
