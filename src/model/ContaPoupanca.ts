@@ -1,6 +1,6 @@
 import { Conta } from "./Conta.js";
 
-export class ContaCorrente extends Conta {
+export class ContaPoupanca extends Conta {
   private _aniversario: number;
 
   constructor(
@@ -18,7 +18,12 @@ export class ContaCorrente extends Conta {
     return this._aniversario;
   }
 
-  public set aniversario(aniversario: number): {
+  public set aniversario(aniversario: number) {
     this._aniversario = aniversario;
+  }
+
+  public visualizar(): void {
+    super.visualizar(); //mostrar o visualizar da classe conta
+    console.log(`Aniversario da poupanca : ${this._aniversario}`);
   }
 }

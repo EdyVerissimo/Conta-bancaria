@@ -1,6 +1,12 @@
-import { ContaRepository } from "../repository/ContaRepository";
+import { Conta } from "../model/Conta.js";
+import { ContaRepository } from "../repository/ContaRepository.js";
 
-export class ContaController implements ContaRepository {
+
+
+export class ContaController {
+  private listaContas: Array<Conta> = [];
+  public numero: number = 0
+
   procurarPorNumero(numero: number): void {
     throw new Error("Method not implemented.");
   }
@@ -10,7 +16,7 @@ export class ContaController implements ContaRepository {
   cadastrar(conta: Conta): void {
     throw new Error("Method not implemented.");
   }
-  atializar(conta: Conta): void {
+  atualizar(conta: Conta): void {
     throw new Error("Method not implemented.");
   }
   sacar(numero: number, valor: number): void {

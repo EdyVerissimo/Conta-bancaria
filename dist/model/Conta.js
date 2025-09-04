@@ -60,12 +60,22 @@ export class Conta {
         console.log("\nDepósito realizado com sucesso!");
     }
     visualizar() {
+        let tipoConta;
+        switch (this._tipo) {
+            case 1:
+                tipoConta = "Conta corrente";
+                break;
+            case 2:
+                tipoConta = "Conta poupanca";
+            default:
+                tipoConta = "tipo de conta Desconhecido";
+        }
         console.log("\n*************************************");
         console.log("        Dados da Conta");
         console.log("*************************************");
         console.log(`Número da Conta: ${this._numero}`);
         console.log(`Agência: ${this._agencia}`);
-        console.log(`Tipo da Conta: ${this._tipo}`);
+        console.log(`Tipo da Conta: ${tipoConta}`);
         console.log(`Titular: ${this._titular}`);
         console.log(`Saldo: R$ ${this._saldo.toFixed(2)}`);
         console.log("****************************************");
