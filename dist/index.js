@@ -1,18 +1,117 @@
-// src/index.ts
+import * as readline from "readline-sync";
+import { ContaController } from "./controller/ContaController.js";
 import { ContaCorrente } from "./model/ContaCorrente.js";
 import { ContaPoupanca } from "./model/ContaPoupanca.js";
-// Instanciando um objeto da Classe ContaCorrente
-const cc1 = new ContaCorrente(1, 123, 1, "João da Silva", 1000.00, 500.00);
-// Instanciando um objeto da Classe ContaPoupanca
-const cp1 = new ContaPoupanca(2, 123, 2, "Maria dos Anjos", 5000.00, 10);
-console.log("--- CONTAS CRIADAS ---");
-cc1.visualizar();
-console.log("\n"); // Adiciona uma linha em branco
-cp1.visualizar();
-console.log("\n--- OPERAÇÕES ---");
-console.log("\nSacando 1200 da Conta Corrente (usando o limite)...");
-cc1.sacar(1200); // Saldo vai para -200
-cc1.visualizar();
-console.log("\nTentando sacar 400 da Conta Corrente (não vai conseguir)...");
-cc1.sacar(400); // Saldo + limite (-200 + 500 = 300) é menor que 400
-cc1.visualizar();
+export function main() {
+    // Instância da Classe ContaController
+    const contas = new ContaController();
+    // Contas testes
+    const cc1 = new ContaCorrente(contas.gerarNumero(), 123, 1, "LUIS INACIO LULA DA SILVA", 13000, 220);
+    contas.cadastrar(cc1);
+    const cp1 = new ContaPoupanca(contas.gerarNumero(), 124, 2, "JAIR MESSIAS BOLSONARO", 22000, 130);
+    contas.cadastrar(cp1);
+    // Menu principal, tentei fazer com crase e ficou todo feio perguntar ao professor pq'
+    let opcao = 0;
+    while (true) {
+        console.log("*****************************************************");
+        console.log("                                                     ");
+        console.log("                    Messi bank                       ");
+        console.log("                                                     ");
+        console.log("*****************************************************");
+        console.log("                                                     ");
+        console.log("            1 - Criar Conta                          ");
+        console.log("            2 - Listar todas as Contas               ");
+        console.log("            3 - Buscar Conta por Numero              ");
+        console.log("            4 - Atualizar Dados da Conta             ");
+        console.log("            5 - Apagar Conta                         ");
+        console.log("            6 - Sacar                                ");
+        console.log("            7 - Depositar                            ");
+        console.log("            8 - Transferir valores entre Contas      ");
+        console.log("            9 - Sair                                 ");
+        console.log("                                                     ");
+        console.log("*****************************************************");
+        console.log("\n");
+        opcao = readline.questionInt("Entre com a opcao desejada: ");
+        if (opcao == 9) {
+            console.log("\nBanco do Brazil com Z - O seu futuro começa aqui!");
+            process.exit(0);
+        }
+        switch (opcao) {
+            case 1:
+                console.log("\nCriar Conta");
+                let titular = readline.question("Digite o nome do Titular: ");
+                let tipo;
+                while (true) {
+                    tipo = readline.questionInt("Digite o tipo da Conta (1-CC ou 2-CP): ");
+                    if (tipo === 1 || tipo === 2)
+                        break;
+                    console.log("Tipo inválido! Digite 1 para Conta Corrente ou 2 para Conta Poupança.");
+                }
+                let saldo = readline.questionFloat("Digite o Saldo Inicial: ");
+                if (tipo === 1) {
+                    let limite = readline.questionFloat("Digite o Limite da Conta Corrente: ");
+                    contas.cadastrar(new ContaCorrente(contas.gerarNumero(), 123, tipo, titular, saldo, limite));
+                }
+                else {
+                    let aniversario = readline.questionInt("Digite o dia do Aniversario da Conta Poupanca: ");
+                    contas.cadastrar(new ContaPoupanca(contas.gerarNumero(), 124, tipo, titular, saldo, aniversario));
+                }
+                break;
+            case 2:
+                console.log("\nListar todas as Contas");
+                contas.listarTodas();
+                break;
+            case 3:
+                console.log("\nBuscar Conta por número");
+                let numeroBusca = readline.questionInt("Digite o numero da conta: ");
+                contas.procurarPorNumero(numeroBusca);
+                break;
+            case 4:
+                console.log("\nAtualizar dados da Conta");
+                let numeroAtualiza = readline.questionInt("Digite o numero da conta: ");
+                let contaAtualizar = contas.procurarPorNumero(numeroAtualiza);
+                if (contaAtualizar) {
+                    let novoTitular = readline.question("Digite o novo nome do Titular: ");
+                    let novoSaldo = readline.questionFloat("Digite o novo Saldo: ");
+                    contaAtualizar.titular = novoTitular;
+                    contaAtualizar.saldo = novoSaldo;
+                    console.log("\nConta atualizada com sucesso!");
+                    contaAtualizar.visualizar();
+                }
+                else {
+                    console.log("\nConta não encontrada!");
+                }
+                break;
+            case 5:
+                console.log("\nApagar Conta");
+                let numeroApagar = readline.questionInt("Digite o numero da conta: ");
+                contas.deletar(numeroApagar);
+                break;
+            case 6:
+                console.log("\nSacar");
+                let numeroSaque = readline.questionInt("Digite o numero da conta: ");
+                let valorSaque = readline.questionFloat("Digite o valor do saque: ");
+                contas.sacar(numeroSaque, valorSaque);
+                break;
+            case 7:
+                console.log("\nDepositar");
+                let numeroDeposito = readline.questionInt("Digite o numero da conta: ");
+                let valorDeposito = readline.questionFloat("Digite o valor do deposito: ");
+                contas.depositar(numeroDeposito, valorDeposito);
+                break;
+            case 8:
+                console.log("\nTransferir");
+                let numeroOrigem = readline.questionInt("Digite o numero da conta de Origem: ");
+                let numeroDestino = readline.questionInt("Digite o numero da conta de Destino: ");
+                let valorTransfer = readline.questionFloat("Digite o valor da transferencia: ");
+                contas.transferir(numeroOrigem, numeroDestino, valorTransfer);
+                break;
+            default:
+                console.log("\nOpção Inválida!");
+                break;
+        }
+        readline.question("\nPressione ENTER para continuar...");
+    }
+}
+// Executa a função principal
+main();

@@ -1,31 +1,118 @@
 import { Conta } from "../model/Conta.js";
-import { ContaRepository } from "../repository/ContaRepository.js";
-
-
+import { ContaCorrente } from "../model/ContaCorrente.js";
+import { ContaPoupanca } from "../model/ContaPoupanca.js";
 
 export class ContaController {
+  // Coleção Array que armazenará os Objetos Conta
   private listaContas: Array<Conta> = [];
-  public numero: number = 0
 
-  procurarPorNumero(numero: number): void {
-    throw new Error("Method not implemented.");
+  // não lembro
+  public numero: number = 0;
+
+  //procura pelo numero da conta no array e devolve os dados dela
+  public procurarPorNumero(numero: number): Conta | null {
+    for (let conta of this.listaContas) {
+      if (conta.numero === numero) {
+        return conta;
+      }
+    }
+    return null;
   }
-  listarTodas(): void {
-    throw new Error("Method not implemented.");
+
+  //mostrar contas cadastradas
+  public listarTodas(): void {
+    if (this.listaContas.length === 0) {
+      console.log("\nNão há contas cadastradas.");
+      return;
+    }
+
+    for (let conta of this.listaContas) {
+      conta.visualizar();
+      console.log("-------------------------------------");
+    }
   }
-  cadastrar(conta: Conta): void {
-    throw new Error("Method not implemented.");
+
+  //adcionar conta
+  public cadastrar(conta: Conta): void {
+    this.listaContas.push(conta);
+    console.log("\nA Conta foi cadastrada com sucesso!");
   }
-  atualizar(conta: Conta): void {
-    throw new Error("Method not implemented.");
+
+  //att
+  public atualizar(conta: Conta): void {
+    let buscaConta = this.procurarPorNumero(conta.numero);
+
+    if (buscaConta) {
+      let indice = this.listaContas.indexOf(buscaConta);
+      this.listaContas[indice] = conta;
+      console.log(
+        `\nA Conta número ${conta.numero} foi atualizada com sucesso!`
+      );
+    } else {
+      console.log(`\nA Conta número ${conta.numero} não foi encontrada!`);
+    }
   }
-  sacar(numero: number, valor: number): void {
-    throw new Error("Method not implemented.");
+
+  //delet acc
+  public deletar(numero: number): void {
+    let buscaConta = this.procurarPorNumero(numero);
+
+    if (buscaConta) {
+      let indice = this.listaContas.indexOf(buscaConta);
+      this.listaContas.splice(indice, 1); // splice remove o item do array
+      console.log(`\nA Conta número ${numero} foi deletada com sucesso!`);
+    } else {
+      console.log(`\nA Conta número ${numero} não foi encontrada!`);
+    }
   }
-  depositar(numero: number, valor: number): void {
-    throw new Error("Method not implemented.");
+
+  //saque
+  public sacar(numero: number, valor: number): void {
+    let buscaConta = this.procurarPorNumero(numero);
+
+    if (buscaConta) {
+      if (buscaConta.sacar(valor) === true) {
+        console.log(`\nO Saque na conta ${numero} foi efetuado com sucesso!`);
+      }
+    } else {
+      console.log(`\nA Conta número ${numero} não foi encontrada!`);
+    }
   }
-  transferir(numeroOrigem: number, numeroDestino: number, valor: number): void {
-    throw new Error("Method not implemented.");
+
+  /// deposito
+
+  public depositar(numero: number, valor: number): void {
+    let buscaConta = this.procurarPorNumero(numero);
+
+    if (buscaConta) {
+      buscaConta.depositar(valor);
+    } else {
+      console.log(`\nA Conta número ${numero} não foi encontrada!`);
+    }
+  }
+
+  //trasnferencia do cacau entre duas contas
+
+  public transferir(
+    numeroOrigem: number,
+    numeroDestino: number,
+    valor: number
+  ): void {
+    let contaOrigem = this.procurarPorNumero(numeroOrigem);
+    let contaDestino = this.procurarPorNumero(numeroDestino);
+
+    if (contaOrigem && contaDestino) {
+      if (contaOrigem.sacar(valor) === true) {
+        contaDestino.depositar(valor);
+        console.log("\nTransferência efetuada com sucesso!");
+      }
+    } else {
+      console.log("\nConta de Origem e/ou Destino não foram encontradas!");
+    }
+  }
+
+  /// adcionar uma conta no proxima memoria do array
+  public gerarNumero(): number {
+    return ++this.numero;
   }
 }
